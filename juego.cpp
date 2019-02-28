@@ -1,16 +1,16 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <sstream>
-#include <ctype.h>
-#include <string.h>
 #include <stdlib.h>     /* srand, rand ,cls*/
 #include<ctime> /*tiempo para random*/
+
 using namespace std;
 using std::cout;
 //reglas de juego:
 
-int filas,columnas,f,c;
+int filas=0;
+int columnas=0;
+int f,c;
 
 
 
@@ -22,8 +22,8 @@ int GenerarTablero(int jugador1,int jugador2){
     //numero es el LA CASILLA QUE SE ESTA GENERANDO EN el tablero
     //@jugador 1, jugador 2 * , misma posicion #;
     int casilla=0;
-    for(int i = 0; i < columnas; ++i) {
-        for(int j = 0; j < filas; ++j) {
+    for(int i = 0; i < filas; ++i) {
+        for(int j = 0; j < columnas; ++j) {
             if (jugador1==casilla && jugador2!=casilla){
                 tablero[i][j]=2000;
                 cout<<" @ ";
@@ -55,17 +55,34 @@ int GenerarTablero(int jugador1,int jugador2){
     }
 };
 int ValidarMultiplo8(int posJugador){
+    cout<<"usted cayo en casilla"<<posJugador<<endl;
     if (posJugador%8==0){
-        posJugador-=posJugador-8;
+        posJugador=posJugador-8;
+        cout<<"usted cayo en un multiplo de 8, retrocede 8 casillas"<<endl;
     }
+
     return posJugador;
 
 }
 int ValidarMultiplo10(int posJugador){
-    int primerDigito=posjugador/10;
+    int primerDigito=posJugador/10;
     if(posJugador%10==0&&(primerDigito)%2==0){
-        posjugador-=2;
+        cout<<"usted cayo en casilla"<<posJugador<<endl;
+        posJugador-=2;
+        cout<<"usted cayo en un multiplo de 10, retrocede 2 casillas"<<endl;
+
     }
+    return posJugador;
+}
+int ValidarMultiplo7(int posJugador){
+
+    if(posJugador%7==0){
+        cout<<"usted cayo en casilla"<<posJugador<<endl;
+        posJugador+=2;
+        cout<<"usted cayo en un multiplo de 7, avanza 2 casillas"<<endl;
+
+    }
+    return posJugador;
 }
 int reglas(int posJugador,int dado,string figuraJ){
     //la ultimas 3 casillas deben sacar el numero exactos
@@ -74,6 +91,8 @@ int reglas(int posJugador,int dado,string figuraJ){
 
         posJugador+=dado;
         posJugador=ValidarMultiplo8(posJugador);
+        posJugador=ValidarMultiplo10(posJugador);
+        posJugador=ValidarMultiplo7(posJugador);
 
     }
     else if(posJugador+dado==(f*c)-1){
@@ -114,12 +133,16 @@ int turno(int posJugador,int num_jugador){
     //rango de 1 a 6casilla
     int dado=rand()%6+1;
 
-    posJugador=reglas(posJugador,dado,figuraJ);
-
     system("CLS");
 
-    //cout<<f*c<<" f*c "<<posJugador+dado<<"  jugador+dado "<<endl;
     cout<<"el jugador "<<figuraJ<<" saco en el dado el numero "<<dado<<endl;
+
+    posJugador=reglas(posJugador,dado,figuraJ);
+
+
+
+    //cout<<f*c<<" f*c "<<posJugador+dado<<"  jugador+dado "<<endl;
+
 
 
     return posJugador;
@@ -144,13 +167,16 @@ int main(){
     int jugador2=0;
 
 
+    while((columnas<3||columnas>10)||(filas<3||filas>10) ){
+        cout<<"ingrese las columnas del arreglo"<<endl;
+        cin>>columnas;
+        cout<<"ingrese las filas del arreglo"<<endl;
+        cin>>filas;
+        f=filas;
+        c=columnas;
 
-    cout<<"ingrese las columnas del arreglo"<<endl;
-    cin>>columnas;
-    cout<<"ingrese las filas del arreglo"<<endl;
-    cin>>filas;
-    f=filas;
-    c=columnas;
+    }
+
 
     GenerarTablero(jugador1,jugador2);
     jugar(jugador1,jugador2);
